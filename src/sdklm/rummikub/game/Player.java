@@ -31,5 +31,8 @@ public class Player {
 	public void setRack(Rack rack) {
 		this.rack = rack;
 	}
-
+	
+	public void takeTile(Tile t) {
+		this.getRack().getRackTiles().add(t);
+	}
 }

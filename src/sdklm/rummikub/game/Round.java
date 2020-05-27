@@ -17,10 +17,10 @@ public class Round {
 	}
 
 	public void start(Player p) {
-		System.out.println("Round " + this.getNumber() + " start for player " + p.getNumber());
-//		System.out.println("Rack content");
-//		for (Tile t : p.getRack().getRackTiles()) {
-//			System.out.println(t.toString());
-//		}
+		System.out.println("Round " + this.getNumber() + " started for player " + p.getNumber());
+	}
+
+	public void end(Player p) {
+		System.out.println("Round " + this.getNumber() + " ended for player " + p.getNumber());
 	}
 }

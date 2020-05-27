@@ -59,7 +59,7 @@ public class MainWindow extends JFrame implements ActionListener {
 			Round round = new Round(1);
 			round.start(game.getPlayers().get(0));
 			this.dispose();
-			PlayerTable playerTable = new PlayerTable(game.getPlayers().get(0));
+			PlayerTable playerTable = new PlayerTable(game.getPlayers().get(0), game.getPouch());
 			playerTable.setVisible(true);
 		}
 	}

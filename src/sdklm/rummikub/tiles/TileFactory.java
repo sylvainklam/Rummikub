@@ -25,42 +25,26 @@ public class TileFactory {
 		}
 		return tiles;
 	}
-	
-	public static boolean isGroup(List<Tile> list) {
-		int number = -1;
-		boolean sameNumber = false;
-		if (list.size() == 3 || list.size() == 4) {
-			for (Tile t : list) {
-				int tileNumber = t.getNumber();
-				if (number == -1)
-					number = tileNumber;
-				if (tileNumber == number) {
-					sameNumber = true;
-				} else {
-					sameNumber = false;
-					break;
-				}
-			}
-		}
-		return sameNumber;
-	}
 
-	public static boolean isRun(List<Tile> list) {
-		boolean sameColor = false;
-		Color color = null;
-		if (list.size() >= 3) {
-			for (Tile t : list) {
-				Color tileColor = t.getColor();
-				if (color == null)
-					color = tileColor;
-				if (tileColor == color)
-					sameColor = true;
-				else {
-					sameColor = false;
-					break;
-				}
+	public static int hasGroup(List<Tile> list) {
+		int number = -1;
+		int cptSameNumber = 0;
+		int score = 0;
+		for (Tile t : list) {
+			if (number == -1) {
+				number = t.getNumber();
+				score = number;
+				cptSameNumber++;
+			}
+			// count tiles with same number
+			if (t.getNumber() == t.getNumber()) {
+				cptSameNumber++;
+				score += t.getNumber();
+			}
+			if (cptSameNumber == 3 || cptSameNumber == 4) {
+				return score;
 			}
 		}
-		return sameColor;
+		return score;
 	}
 }
