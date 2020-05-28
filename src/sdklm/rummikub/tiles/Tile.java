@@ -6,7 +6,7 @@ package sdklm.rummikub.tiles;
  * @author sdklm
  *
  */
-public class Tile {
+public class Tile implements Comparable<Tile> {
 
 	private int number;// from 1 to 13
 	private Color color;// see Color Enumeration
@@ -39,6 +39,16 @@ public class Tile {
 
 	public String toString() {
 		return "Tile " + getNumber() + " (" + getColor() + ")";
+	}
+
+	@Override
+	public int compareTo(Tile o) {
+		int compareage = ((Tile) o).getNumber();
+		/* For Ascending order */
+		return this.number - compareage;
+
+		/* For Descending order do like this */
+		// return compareage-this.studentage;
 	}
 
 }

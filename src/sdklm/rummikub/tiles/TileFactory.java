@@ -1,7 +1,11 @@
 package sdklm.rummikub.tiles;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import sdklm.rummikub.game.Game;
+import sdklm.rummikub.game.ScoreTable;
 
 /**
  * Tiles list initialization
@@ -26,25 +30,38 @@ public class TileFactory {
 		return tiles;
 	}
 
-	public static int hasGroup(List<Tile> list) {
+	private static List<Tile> getGroups(List<Tile> list) {
+		List<Tile> groups = new ArrayList<>();
 		int number = -1;
-		int cptSameNumber = 0;
-		int score = 0;
 		for (Tile t : list) {
 			if (number == -1) {
 				number = t.getNumber();
-				score = number;
-				cptSameNumber++;
 			}
-			// count tiles with same number
-			if (t.getNumber() == t.getNumber()) {
-				cptSameNumber++;
-				score += t.getNumber();
-			}
-			if (cptSameNumber == 3 || cptSameNumber == 4) {
-				return score;
+			if (t.getNumber() == number) {
+				groups.add(t);
+				list.remove(t);
 			}
 		}
-		return score;
+		return groups;
+	}
+
+	private static List<Tile> getRuns(List<Tile> list) {
+		List<Tile> runs = new ArrayList<>();
+		Collections.sort(list);
+		for (Tile t : list) {
+			System.out.println(t.toString());
+		}
+		return runs;
+	}
+
+	public static void analyze(List<Tile> list, Game game) {
+		List<Tile> groups = getGroups(list);
+		System.out.println("nb groups " + groups.size());
+		List<Tile> runs = getRuns(list);
+		System.out.println("nb runs " + runs.size());
+		if (groups.size() == 0 && runs.size() == 0) {
+			ScoreTable scoreTable = new ScoreTable(game.getCurrentPlayer(), game.getCurrentRound(), 0);
+			game.getScoreTable().add(scoreTable);
+		}
 	}
 }

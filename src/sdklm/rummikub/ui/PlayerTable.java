@@ -1,10 +1,13 @@
 package sdklm.rummikub.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,14 +16,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import sdklm.rummikub.game.Player;
-import sdklm.rummikub.game.Pouch;
+import sdklm.rummikub.game.Game;
 import sdklm.rummikub.tiles.Tile;
 
 @SuppressWarnings("serial")
 public class PlayerTable extends JFrame {
 
-	public PlayerTable(Player p, Pouch pouch) {
+	public PlayerTable(Game game) {
 		this.setSize(1024, 768);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setTitle("Player table");
@@ -33,7 +35,7 @@ public class PlayerTable extends JFrame {
 		getContentPane().add(panel);
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		JLabel lblNewLabel = new JLabel("Player " + p.getNumber());
+		JLabel lblNewLabel = new JLabel("Player " + game.getCurrentPlayer().getNumber());
 		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		panel.add(lblNewLabel);
 		JPanel panelTiles = new JPanel();
@@ -51,14 +53,14 @@ public class PlayerTable extends JFrame {
 		JPanel panel_1 = new JPanel();
 		getContentPane().add(panel_1);
 		panel_1.setLayout(new FlowLayout());
-		for (int i = 0; i < p.getRack().getRackTiles().size(); i++) {
-			Tile t = p.getRack().getRackTiles().get(i);
+		for (int i = 0; i < game.getCurrentPlayer().getRack().getRackTiles().size(); i++) {
+			Tile t = game.getCurrentPlayer().getRack().getRackTiles().get(i);
 			TileComponent btnTile = new TileComponent(t);
 			panelTiles.add(btnTile, BorderLayout.CENTER);
 			btnTile.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					panel_1.add(btnTile, BorderLayout.CENTER);
+					panel_1.add(btnTile);
 					panelTiles.remove(btnTile);
 					repaint();
 				}
@@ -66,46 +68,53 @@ public class PlayerTable extends JFrame {
 		}
 
 		// panel.add(btnEndRound);
+		/**
+		 * Action bouton End Round
+		 */
 		btnEndRound.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//						int nbTiles = panel_1.getComponentCount();
-//						if (nbTiles == 0) {
-//							JOptionPane.showMessageDialog(null, "Put some tiles before ending your turn !", " WARNING ",
-//									JOptionPane.WARNING_MESSAGE);
-//						} else {
-//							List<Tile> list = new ArrayList<Tile>();
-//							System.out.println("nbtiles > 0");
-//							for (Component tileComponent : panel_1.getComponents()) {
-//								TileComponent t = (TileComponent) tileComponent;
-//								list.add(t.getTile());
-//							}
-//							int score = TileFactory.hasGroup(list);
-//							System.out.println("score " + score);
-//						}
+				int score = 0;
+				int nbTiles = panel_1.getComponentCount();
+				if (nbTiles == 0) {
+					JOptionPane.showMessageDialog(null, "Please take a tile before ending round", " INFORMATION ",
+							JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					List<Tile> list = new ArrayList<Tile>();
+					for (Component tileComponent : panel_1.getComponents()) {
+						TileComponent t = (TileComponent) tileComponent;
+						list.add(t.getTile());
+					}
+					System.out.println("score " + score);
+				}
 			}
 		});
+
+		/**
+		 * Action bouton Take Tile
+		 */
 		btnTakeTile.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int nbTiles = panel.getComponentCount();
-				if (nbTiles == 17) {
-					JOptionPane.showMessageDialog(null, "You can't have more than 14 tiles in your rack !", " WARNING ",
-							JOptionPane.WARNING_MESSAGE);
-				} else {
-					Tile t = pouch.getRandomTile();
-					TileComponent btnTilePouch = new TileComponent(t);
-					panel.add(btnTilePouch, BorderLayout.CENTER);
-					btnTilePouch.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							panelTiles.add(btnTilePouch);
-						}
-					});
-					panelTiles.revalidate();
-					panelTiles.repaint();
-				}
+				Tile t = game.getPouch().getRandomTile();
+				TileComponent btnTilePouch = new TileComponent(t);
+				panelTiles.add(btnTilePouch, BorderLayout.CENTER);
+				btnTilePouch.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						panel_1.add(btnTilePouch);
+						panelTiles.remove(btnTilePouch);
+						repaint();
+					}
+				});
+				panelTiles.revalidate();
+				panelTiles.repaint();
+				game.getCurrentPlayer().endRound(panel_1.getComponents(), game);
+				dispose();
+				game.setCurrentPlayer(game.nextPlayer());
+				PlayerTable playerTable = new PlayerTable(game);
+				playerTable.setVisible(true);
 			}
 		});
 	}

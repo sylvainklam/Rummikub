@@ -12,7 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import sdklm.rummikub.game.Game;
-import sdklm.rummikub.game.Round;
 import sdklm.rummikub.tiles.Tile;
 import sdklm.rummikub.tiles.TileFactory;
 
@@ -56,10 +55,12 @@ public class MainWindow extends JFrame implements ActionListener {
 			int nbPlayers = Integer.valueOf(selectedItem.substring(0, 1));
 			List<Tile> tiles = TileFactory.buildTilesList();
 			Game game = new Game(nbPlayers, tiles);
-			Round round = new Round(1);
-			round.start(game.getPlayers().get(0));
+//			Round round = new Round(1);
+//			game.setCurrentRound(round);
+//			round.start(game.getPlayers().get(0));
+//			game.addRound(round);
 			this.dispose();
-			PlayerTable playerTable = new PlayerTable(game.getPlayers().get(0), game.getPouch());
+			PlayerTable playerTable = new PlayerTable(game);
 			playerTable.setVisible(true);
 		}
 	}
