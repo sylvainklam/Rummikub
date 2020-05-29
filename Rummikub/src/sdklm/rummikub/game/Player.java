@@ -1,8 +1,12 @@
 package sdklm.rummikub.game;
 
+import java.awt.Component;
+import java.util.ArrayList;
 import java.util.List;
 
 import sdklm.rummikub.tiles.Tile;
+import sdklm.rummikub.tiles.TileFactory;
+import sdklm.rummikub.ui.TileComponent;
 
 public class Player {
 
@@ -32,4 +36,17 @@ public class Player {
 		this.rack = rack;
 	}
 
+	public void takeTile(Tile t) {
+		this.getRack().getRackTiles().add(t);
+	}
+
+	public void endRound(Component[] components, Game game) {
+		System.out.println("endRound");
+		List<Tile> list = new ArrayList<Tile>();
+		for (Component tileComponent : components) {
+			TileComponent t = (TileComponent) tileComponent;
+			list.add(t.getTile());
+		}
+		TileFactory.analyze(list, game);
+	}
 }

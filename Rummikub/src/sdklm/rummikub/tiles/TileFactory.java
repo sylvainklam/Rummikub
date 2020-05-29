@@ -1,7 +1,10 @@
 package sdklm.rummikub.tiles;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import sdklm.rummikub.game.Game;
 
 /**
  * Tiles list initialization
@@ -25,42 +28,23 @@ public class TileFactory {
 		}
 		return tiles;
 	}
-	
-	public static boolean isGroup(List<Tile> list) {
-		int number = -1;
-		boolean sameNumber = false;
-		if (list.size() == 3 || list.size() == 4) {
-			for (Tile t : list) {
-				int tileNumber = t.getNumber();
-				if (number == -1)
-					number = tileNumber;
-				if (tileNumber == number) {
-					sameNumber = true;
-				} else {
-					sameNumber = false;
-					break;
-				}
-			}
-		}
-		return sameNumber;
+
+	public static void analyze(List<Tile> list, Game game) {
+		System.out.println("analyse");
+		Collections.sort(list);
+		System.out.println(list);
+
 	}
 
-	public static boolean isRun(List<Tile> list) {
-		boolean sameColor = false;
-		Color color = null;
-		if (list.size() >= 3) {
+	private int getNbTilesWithSameNumber(List<Tile> list) {
+		int nb = 0;
+		for (int i = 1; i <= 13; i++) {
 			for (Tile t : list) {
-				Color tileColor = t.getColor();
-				if (color == null)
-					color = tileColor;
-				if (tileColor == color)
-					sameColor = true;
-				else {
-					sameColor = false;
-					break;
+				if (t.getNumber() == i) {
+					nb++;
 				}
 			}
 		}
-		return sameColor;
+		return nb;
 	}
 }
