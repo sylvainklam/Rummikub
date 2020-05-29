@@ -43,12 +43,7 @@ public class Tile implements Comparable<Tile> {
 
 	@Override
 	public int compareTo(Tile o) {
-		int compareage = ((Tile) o).getNumber();
-		/* For Ascending order */
-		return this.number - compareage;
-
-		/* For Descending order do like this */
-		// return compareage-this.studentage;
+		int compareNumber = ((Tile) o).getNumber();
+		return this.number - compareNumber;
 	}
-
 }
