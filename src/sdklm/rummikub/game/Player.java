@@ -41,6 +41,7 @@ public class Player {
 	}
 
 	public void endRound(Component[] components, Game game) {
+		System.out.println("endRound");
 		List<Tile> list = new ArrayList<Tile>();
 		for (Component tileComponent : components) {
 			TileComponent t = (TileComponent) tileComponent;

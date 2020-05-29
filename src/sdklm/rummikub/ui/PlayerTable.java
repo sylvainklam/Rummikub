@@ -1,18 +1,14 @@
 package sdklm.rummikub.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
@@ -69,30 +65,23 @@ public class PlayerTable extends JFrame {
 
 		// panel.add(btnEndRound);
 		/**
-		 * Action bouton End Round
+		 * Action button End Round
 		 */
 		btnEndRound.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int score = 0;
-				int nbTiles = panel_1.getComponentCount();
-				if (nbTiles == 0) {
-					JOptionPane.showMessageDialog(null, "Please take a tile before ending round", " INFORMATION ",
-							JOptionPane.INFORMATION_MESSAGE);
-				} else {
-					List<Tile> list = new ArrayList<Tile>();
-					for (Component tileComponent : panel_1.getComponents()) {
-						TileComponent t = (TileComponent) tileComponent;
-						list.add(t.getTile());
-					}
-					System.out.println("score " + score);
-				}
+				System.out.println("nbComponents " + panel_1.getComponentCount());
+				game.getCurrentPlayer().endRound(panel_1.getComponents(), game);
+				dispose();
+				game.setCurrentPlayer(game.nextPlayer());
+				PlayerTable playerTable = new PlayerTable(game);
+				playerTable.setVisible(true);
 			}
 		});
 
 		/**
-		 * Action bouton Take Tile
+		 * Action button Take Tile
 		 */
 		btnTakeTile.addActionListener(new ActionListener() {
 			@Override
