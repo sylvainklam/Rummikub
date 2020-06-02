@@ -40,13 +40,14 @@ public class Player {
 		this.getRack().getRackTiles().add(t);
 	}
 
-	public void endRound(Component[] components, Game game) {
-		System.out.println("endRound");
+	public int endRound(Component[] components, Game game) {
+		System.out.println("end Round " + game.getCurrentRound().getNumber() + " for player "
+				+ game.getCurrentPlayer().getNumber());
 		List<Tile> list = new ArrayList<Tile>();
 		for (Component tileComponent : components) {
 			TileComponent t = (TileComponent) tileComponent;
 			list.add(t.getTile());
 		}
-		TileFactory.analyze(list, game);
+		return TileFactory.analyze(list, game);
 	}
 }

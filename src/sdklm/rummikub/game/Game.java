@@ -26,8 +26,10 @@ public class Game {
 			this.getPlayers().add(player);
 		}
 		this.setCurrentPlayer(this.getPlayers().get(0));
+		this.setCurrentRound(new Round(1));
 		this.setPouch(new Pouch(list));
-		System.out.println("Game started - pouch content = " + this.getPouch().getContent().size());
+		System.out.println("Game started with player " + getCurrentPlayer().getNumber() + " - pouch content = "
+				+ this.getPouch().getContent().size());
 	}
 
 	public List<Player> getPlayers() {
@@ -65,6 +67,8 @@ public class Game {
 	public Player nextPlayer() {
 		int number = getCurrentPlayer().getNumber();
 		if (number == getPlayers().size()) {
+			int nextRound = getCurrentRound().getNumber() + 1;
+			setCurrentRound(new Round(nextRound));
 			return getPlayers().get(0);
 		}
 		return getPlayers().get(number++);

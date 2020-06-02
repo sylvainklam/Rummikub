@@ -1,5 +1,7 @@
 package sdklm.rummikub.ui;
 
+import java.awt.Color;
+
 import javax.swing.JButton;
 
 import sdklm.rummikub.tiles.Tile;
@@ -14,7 +16,8 @@ public class TileComponent extends JButton {
 		this.setText("" + t.getNumber());
 		setForeground(java.awt.Color.WHITE);
 		if (t.getColor() == null) {
-			setBackground(java.awt.Color.DARK_GRAY);
+			setBackground(java.awt.Color.white);
+			setForeground(Color.black);
 		} else {
 			switch (t.getColor()) {
 			case BLACK:
@@ -30,7 +33,8 @@ public class TileComponent extends JButton {
 				setBackground(java.awt.Color.orange);
 				break;
 			default:
-				setBackground(java.awt.Color.darkGray);
+				setBackground(java.awt.Color.white);
+				setForeground(Color.black);
 				break;
 			}
 		}

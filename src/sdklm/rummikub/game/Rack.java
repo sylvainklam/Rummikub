@@ -29,4 +29,12 @@ public class Rack {
 		tiles.remove(randomTile);
 		return randomTile;
 	}
+
+	public void addTileToRack(Tile t) {
+		getRackTiles().add(t);
+	}
+
+	public void removeTilesFromRack(List<Tile> list) {
+		getRackTiles().removeAll(list);
+	}
 }
