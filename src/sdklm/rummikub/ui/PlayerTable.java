@@ -76,7 +76,7 @@ public class PlayerTable extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int score = game.getCurrentPlayer().endRound(panel_1.getComponents(), game);
+				int score = game.getCurrentPlayer().endTurn(panel_1.getComponents(), game);
 				if (score < 30) {
 					JOptionPane.showMessageDialog(null,
 							"Your score is " + score + " points. You must have at least 30 points",
@@ -132,7 +132,7 @@ public class PlayerTable extends JFrame {
 					});
 					panelTiles.revalidate();
 					panelTiles.repaint();
-					game.getCurrentPlayer().endRound(panel_1.getComponents(), game);
+					game.getCurrentPlayer().endTurn(panel_1.getComponents(), game);
 					dispose();
 					game.setCurrentPlayer(game.nextPlayer());
 					PlayerTable playerTable = new PlayerTable(game);

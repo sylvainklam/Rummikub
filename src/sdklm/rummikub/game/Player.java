@@ -40,9 +40,8 @@ public class Player {
 		this.getRack().getRackTiles().add(t);
 	}
 
-	public int endRound(Component[] components, Game game) {
-		System.out.println("end Round " + game.getCurrentRound().getNumber() + " for player "
-				+ game.getCurrentPlayer().getNumber());
+	public int endTurn(Component[] components, Game game) {
+		System.out.println("end turn for player " + game.getCurrentPlayer().getNumber());
 		List<Tile> list = new ArrayList<Tile>();
 		for (Component tileComponent : components) {
 			TileComponent t = (TileComponent) tileComponent;

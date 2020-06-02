@@ -67,8 +67,6 @@ public class Game {
 	public Player nextPlayer() {
 		int number = getCurrentPlayer().getNumber();
 		if (number == getPlayers().size()) {
-			int nextRound = getCurrentRound().getNumber() + 1;
-			setCurrentRound(new Round(nextRound));
 			return getPlayers().get(0);
 		}
 		return getPlayers().get(number++);
