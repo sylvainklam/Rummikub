@@ -5,6 +5,12 @@ import java.util.List;
 
 import sdklm.rummikub.tiles.Tile;
 
+/**
+ * Rummikub Game
+ * 
+ * @author SKLAM
+ *
+ */
 public class Game {
 
 	private List<Player> players;

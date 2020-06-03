@@ -5,6 +5,12 @@ import java.util.Random;
 
 import sdklm.rummikub.tiles.Tile;
 
+/**
+ * Game pouch
+ * 
+ * @author SKLAM
+ *
+ */
 public class Pouch {
 
 	public Pouch(List<Tile> list) {

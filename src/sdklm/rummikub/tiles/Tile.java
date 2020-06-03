@@ -10,7 +10,8 @@ public class Tile implements Comparable<Tile> {
 
 	private int number;// from 1 to 13
 	private Color color;// see Color Enumeration
-
+	private int playedBy;
+	
 	public Tile() {// this will be a joker by default
 		setNumber(0);
 		setColor(null);
@@ -45,5 +46,13 @@ public class Tile implements Comparable<Tile> {
 	public int compareTo(Tile o) {
 		int compareNumber = ((Tile) o).getNumber();
 		return this.number - compareNumber;
+	}
+
+	public int getPlayedBy() {
+		return playedBy;
+	}
+
+	public void setPlayedBy(int playedBy) {
+		this.playedBy = playedBy;
 	}
 }

@@ -12,9 +12,10 @@ public class Rack {
 
 	private List<Tile> rackTiles = new ArrayList<Tile>();
 
-	public Rack(List<Tile> tiles) {
+	public Rack(List<Tile> tiles, int playerNumber) {
 		for (int i = 1; i <= MAX_TILES; i++) {
 			Tile tile = getRandomTile(tiles);
+			tile.setPlayedBy(playerNumber);
 			getRackTiles().add(tile);
 		}
 	}

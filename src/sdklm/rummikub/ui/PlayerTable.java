@@ -22,8 +22,8 @@ import sdklm.rummikub.tiles.Tile;
 @SuppressWarnings("serial")
 public class PlayerTable extends JFrame {
 
-	public PlayerTable(Game game) {
-		this.setSize(1024, 768);
+	public PlayerTable(Game game, Component[] components) {
+		this.setSize(1280, 768);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setTitle("Player table");
 		this.setResizable(true);
@@ -33,27 +33,32 @@ public class PlayerTable extends JFrame {
 
 		JPanel panel = new JPanel();
 		getContentPane().add(panel);
-		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
 		JLabel lblNewLabel = new JLabel(
 				"Round " + game.getCurrentRound().getNumber() + " - Player " + game.getCurrentPlayer().getNumber());
 		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		panel.add(lblNewLabel);
-		JPanel panelTiles = new JPanel();
-		JPanel panel_2 = new JPanel();
-		panel.add(panel_2);
+		JPanel panelButtons = new JPanel();
+		panel.add(panelButtons);
 
 		JButton btnTakeTile = new JButton("Take tile");
-		panel_2.add(btnTakeTile);
+		panelButtons.add(btnTakeTile);
 
-		JButton btnEndRound = new JButton("End round");
-		panel_2.add(btnEndRound);
-
+		JButton btnEndTurn = new JButton("End turn");
+		panelButtons.add(btnEndTurn);
+		JPanel panelTiles = new JPanel();
 		panel.add(panelTiles);
-
-		JPanel panel_1 = new JPanel();
-		getContentPane().add(panel_1);
-		panel_1.setLayout(new FlowLayout());
+		
+		CountdownPanel panelTimer = new CountdownPanel();
+		panel.add(panelTimer);
+		
+//		JLabel lblNewLabel_1 = new JLabel("Timer");
+//		panelTimer.add(lblNewLabel_1);
+		
+		JPanel panelBoard = new JPanel();
+		getContentPane().add(panelBoard);
+		panelBoard.setLayout(new FlowLayout());
 		for (int i = 0; i < game.getCurrentPlayer().getRack().getRackTiles().size(); i++) {
 			Tile t = game.getCurrentPlayer().getRack().getRackTiles().get(i);
 			TileComponent btnTile = new TileComponent(t);
@@ -61,47 +66,65 @@ public class PlayerTable extends JFrame {
 			btnTile.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					panel_1.add(btnTile);
+					panelBoard.add(btnTile);
 					panelTiles.remove(btnTile);
 					repaint();
 				}
 			});
 		}
-
+		if (components != null && components.length > 0) {
+			for (Component component : components) {
+				panelBoard.add(component);
+			}
+		}
 		// panel.add(btnEndRound);
 		/**
-		 * Action button End Round
+		 * Action button End turn
 		 */
-		btnEndRound.addActionListener(new ActionListener() {
-
+		btnEndTurn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int score = game.getCurrentPlayer().endTurn(panel_1.getComponents(), game);
-				if (score < 30) {
-					JOptionPane.showMessageDialog(null,
-							"Your score is " + score + " points. You must have at least 30 points",
-							" Not enough points ", JOptionPane.WARNING_MESSAGE);
-					for (Component component : panel_1.getComponents()) {
-						panelTiles.add(component);
+				if (game.getCurrentPlayer().isFirstTurn()) {
+					int score = game.getCurrentPlayer().endTurn(panelBoard.getComponents(), game);
+					if (score < 30) {
+						JOptionPane.showMessageDialog(null,
+								"Your score is " + score + " points. You must have at least 30 points",
+								" Not enough points ", JOptionPane.WARNING_MESSAGE);
+						for (Component component : panelBoard.getComponents()) {
+							TileComponent tileComponent = (TileComponent) component;
+							if (tileComponent.getTile().getPlayedBy() == game.getCurrentPlayer().getNumber()) {
+								panelTiles.add(component);
+								panelBoard.remove(component);
+							}
+						}
+						repaint();
+					} else {
+						List<Tile> listToRemove = new ArrayList<Tile>();
+						revalidate();
+						repaint();
+						JOptionPane.showMessageDialog(null, "Your score is " + score + " points.", " Congratulations! ",
+								JOptionPane.INFORMATION_MESSAGE);
+						dispose();
+						Component[] tabComponents = panelBoard.getComponents();
+						for (Component component : tabComponents) {
+							TileComponent tileComponent = (TileComponent) component;
+							listToRemove.add(tileComponent.getTile());
+						}
+						game.getCurrentPlayer().getRack().removeTilesFromRack(listToRemove);
+						game.getCurrentPlayer().setFirstTurn(false);
+						game.setCurrentPlayer(game.nextPlayer());
+						PlayerTable playerTable = new PlayerTable(game, panelBoard.getComponents());
+						playerTable.setVisible(true);
 					}
-					panel_1.removeAll();
-					repaint();
 				} else {
-					List<Tile> listToRemove = new ArrayList<Tile>();
-					revalidate();
-					repaint();
-					JOptionPane.showMessageDialog(null, "Your score is " + score + " points.", " Congratulations! ",
-							JOptionPane.INFORMATION_MESSAGE);
-					dispose();
-					Component[] tabComponents = panel_1.getComponents();
-					for (Component component : tabComponents) {
-						TileComponent tileComponent = (TileComponent) component;
-						listToRemove.add(tileComponent.getTile());
+					System.out.println("end turn for player " + game.getCurrentPlayer().getNumber());
+					if (game.getCurrentPlayer().getRack().getRackTiles().size() == 0) {
+						JOptionPane.showMessageDialog(null,
+								"RUMMIKUB ! Player " + game.getCurrentPlayer().getNumber() + " wins.",
+								" Congratulations! ", JOptionPane.INFORMATION_MESSAGE);
+						ScoreTable scoreTable = new ScoreTable();
+						scoreTable.setVisible(true);
 					}
-					game.getCurrentPlayer().getRack().removeTilesFromRack(listToRemove);
-					game.setCurrentPlayer(game.nextPlayer());
-					PlayerTable playerTable = new PlayerTable(game);
-					playerTable.setVisible(true);
 				}
 			}
 		});
@@ -112,32 +135,27 @@ public class PlayerTable extends JFrame {
 		btnTakeTile.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (panel_1.getComponentCount() > 0) {
-					JOptionPane.showMessageDialog(null, "You cannot take a tile because you already dropped some tiles",
-							" Take tile forbidden ", JOptionPane.WARNING_MESSAGE);
-				} else {
-					Tile t = game.getPouch().getRandomTile();
-					System.out.println("Player " + game.getCurrentPlayer().getNumber() + " took " + t.toString());
-					JOptionPane.showMessageDialog(null, "You took " + t.toString(), " Tile from the pouch",
-							JOptionPane.INFORMATION_MESSAGE);
-					game.getCurrentPlayer().getRack().addTileToRack(t);
-					TileComponent btnTilePouch = new TileComponent(t);
-					panelTiles.add(btnTilePouch, BorderLayout.CENTER);
-					btnTilePouch.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							panel_1.add(btnTilePouch);
-							repaint();
-						}
-					});
-					panelTiles.revalidate();
-					panelTiles.repaint();
-					game.getCurrentPlayer().endTurn(panel_1.getComponents(), game);
-					dispose();
-					game.setCurrentPlayer(game.nextPlayer());
-					PlayerTable playerTable = new PlayerTable(game);
-					playerTable.setVisible(true);
-				}
+				Tile t = game.getPouch().getRandomTile();
+				System.out.println("Player " + game.getCurrentPlayer().getNumber() + " took " + t.toString());
+				JOptionPane.showMessageDialog(null, "You took " + t.toString(), " Tile from the pouch",
+						JOptionPane.INFORMATION_MESSAGE);
+				game.getCurrentPlayer().getRack().addTileToRack(t);
+				TileComponent btnTilePouch = new TileComponent(t);
+				panelTiles.add(btnTilePouch, BorderLayout.CENTER);
+				btnTilePouch.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						panelBoard.add(btnTilePouch);
+						repaint();
+					}
+				});
+				panelTiles.revalidate();
+				panelTiles.repaint();
+				game.getCurrentPlayer().endTurn(panelBoard.getComponents(), game);
+				dispose();
+				game.setCurrentPlayer(game.nextPlayer());
+				PlayerTable playerTable = new PlayerTable(game, panelBoard.getComponents());
+				playerTable.setVisible(true);
 			}
 		});
 	}

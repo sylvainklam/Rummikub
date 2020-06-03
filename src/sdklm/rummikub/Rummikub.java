@@ -1,5 +1,8 @@
 package sdklm.rummikub;
 
+/**
+ * Main class for Rummikub game
+ */
 import java.util.List;
 
 import sdklm.rummikub.game.Game;

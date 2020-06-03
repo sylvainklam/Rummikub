@@ -6,6 +6,12 @@ import javax.swing.JButton;
 
 import sdklm.rummikub.tiles.Tile;
 
+/**
+ * Tile component (JButton like)
+ * 
+ * @author SKLAM
+ *
+ */
 @SuppressWarnings("serial")
 public class TileComponent extends JButton {
 
@@ -14,26 +20,26 @@ public class TileComponent extends JButton {
 	public TileComponent(Tile t) {
 		setTile(t);
 		this.setText("" + t.getNumber());
-		setForeground(java.awt.Color.WHITE);
+		setForeground(Color.WHITE);
 		if (t.getColor() == null) {
-			setBackground(java.awt.Color.white);
+			setBackground(Color.white);
 			setForeground(Color.black);
 		} else {
 			switch (t.getColor()) {
 			case BLACK:
-				setBackground(java.awt.Color.black);
+				setBackground(Color.black);
 				break;
 			case RED:
-				setBackground(java.awt.Color.red);
+				setBackground(Color.red);
 				break;
 			case BLUE:
-				setBackground(java.awt.Color.blue);
+				setBackground(Color.blue);
 				break;
 			case ORANGE:
-				setBackground(java.awt.Color.orange);
+				setBackground(Color.orange);
 				break;
 			default:
-				setBackground(java.awt.Color.white);
+				setBackground(Color.white);
 				setForeground(Color.black);
 				break;
 			}
