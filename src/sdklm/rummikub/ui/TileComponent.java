@@ -13,7 +13,7 @@ import sdklm.rummikub.tiles.Tile;
  *
  */
 @SuppressWarnings("serial")
-public class TileComponent extends JButton {
+public class TileComponent extends JButton implements Comparable<TileComponent> {
 
 	private Tile tile;
 
@@ -52,5 +52,10 @@ public class TileComponent extends JButton {
 
 	public void setTile(Tile tile) {
 		this.tile = tile;
+	}
+
+	@Override
+	public int compareTo(TileComponent o) {
+		return this.getTile().getNumber() - o.getTile().getNumber();
 	}
 }

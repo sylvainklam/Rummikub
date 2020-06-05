@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 
 public class Tileset {
-	public static final int MIN_NUM_CARDS_IN_GROUP_OR_RUN = 3;
-	public static final int MAX_NUM_CARDS_IN_GROUP = 4;
+	public static final int MIN_NUM_TILES_IN_GROUP_OR_RUN = 3;
+	public static final int MAX_NUM_TILES_IN_GROUP = 4;
 
 	private List<Tile> tiles;
 
@@ -24,6 +24,10 @@ public class Tileset {
 
 	public String toString() {
 		return getTiles().toString();
+	}
+
+	public int size() {
+		return getTiles().size();
 	}
 
 	private static boolean isValidRankInRun(final int rank, final int cardNumberInRun) {
@@ -67,8 +71,8 @@ public class Tileset {
 	}
 
 	boolean isValid() {
-		if (tiles.size() < MIN_NUM_CARDS_IN_GROUP_OR_RUN) {
-			System.out.print(tiles + " is invalid. Expecting at least " + MIN_NUM_CARDS_IN_GROUP_OR_RUN
+		if (tiles.size() < MIN_NUM_TILES_IN_GROUP_OR_RUN) {
+			System.out.print(tiles + " is invalid. Expecting at least " + MIN_NUM_TILES_IN_GROUP_OR_RUN
 					+ " cards, found " + tiles.size());
 			return false;
 		}
@@ -85,7 +89,7 @@ public class Tileset {
 	}
 
 	public boolean isValidGroup() {
-		return tiles.size() >= MIN_NUM_CARDS_IN_GROUP_OR_RUN && tiles.size() <= MAX_NUM_CARDS_IN_GROUP
+		return tiles.size() >= MIN_NUM_TILES_IN_GROUP_OR_RUN && tiles.size() <= MAX_NUM_TILES_IN_GROUP
 				&& isDifferentColors(tiles) && isSameRanks(tiles);
 	}
 

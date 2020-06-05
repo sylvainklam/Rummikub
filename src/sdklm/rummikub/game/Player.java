@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import sdklm.rummikub.tiles.Tile;
+import sdklm.rummikub.tiles.TileGroup;
 import sdklm.rummikub.tiles.Tileset;
 import sdklm.rummikub.ui.TileComponent;
 
@@ -56,14 +57,44 @@ public class Player {
 		Collections.sort(list);
 		System.out.println(list);
 
-		if (list.size() < Tileset.MIN_NUM_CARDS_IN_GROUP_OR_RUN)
+		if (list.size() < Tileset.MIN_NUM_TILES_IN_GROUP_OR_RUN)
 			return score;
 		else {
-			Tileset tileset = new Tileset(list);
-			if (tileset.isValidGroup() || tileset.isValidRun()) {
-				score = Tileset.getScore(tileset);
-				if (score >= 30)
-					return score;
+			if (list.size() == Tileset.MIN_NUM_TILES_IN_GROUP_OR_RUN || list.size() == Tileset.MAX_NUM_TILES_IN_GROUP) {
+				Tileset tileset = new Tileset(list);
+				if (tileset.isValidGroup() || tileset.isValidRun()) {
+					score = Tileset.getScore(tileset);
+					if (score >= 30)
+						return score;
+				}
+			} else {
+				Tileset tileset = new Tileset(list);
+				if (tileset.isValidRun()) {
+					score = Tileset.getScore(tileset);
+				} else {
+					int nbElements = tileset.size();
+					System.out.println("nb elements " + nbElements);
+					int nbGroupes = nbElements / Tileset.MIN_NUM_TILES_IN_GROUP_OR_RUN;
+					System.out.println(
+							"nb groupes possibles avec " + Tileset.MIN_NUM_TILES_IN_GROUP_OR_RUN + " : " + nbGroupes);
+					int reste = nbElements % Tileset.MIN_NUM_TILES_IN_GROUP_OR_RUN;
+					if (reste == 0) {
+						System.out.println("on peut former " + nbGroupes + " groupes de "
+								+ Tileset.MIN_NUM_TILES_IN_GROUP_OR_RUN + " tiles");
+						for (int i = 1; i <= nbGroupes; i++) {
+							List<Tile> tiles = tileset.getTiles().subList(0, Tileset.MIN_NUM_TILES_IN_GROUP_OR_RUN);
+							TileGroup tileGroup = new TileGroup(tiles);			
+							if (tileGroup.isValidGroup()) {
+								score += Tileset.getScore(tileset);
+								tileset.getTiles().removeAll(tiles);
+							}
+						}
+
+					} else {
+						System.out.println("il y aura " + nbGroupes + " groupes et il faudra ajouter 1 tile sur "
+								+ reste + " groupes");
+					}
+				}
 			}
 		}
 		return score;

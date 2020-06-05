@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -19,6 +20,12 @@ import javax.swing.SwingConstants;
 import sdklm.rummikub.game.Game;
 import sdklm.rummikub.tiles.Tile;
 
+/**
+ * Player table
+ * 
+ * @author SKLAM
+ *
+ */
 @SuppressWarnings("serial")
 public class PlayerTable extends JFrame {
 
@@ -31,10 +38,16 @@ public class PlayerTable extends JFrame {
 		this.setVisible(true);
 		getContentPane().setLayout(new GridLayout(2, 2, 0, 0));
 
+		/**
+		 * Main panel : we will add buttons, player tiles and timer
+		 */
 		JPanel panel = new JPanel();
 		getContentPane().add(panel);
 		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
+		/**
+		 * Label and buttons
+		 */
 		JLabel lblNewLabel = new JLabel(
 				"Round " + game.getCurrentRound().getNumber() + " - Player " + game.getCurrentPlayer().getNumber());
 		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -42,23 +55,45 @@ public class PlayerTable extends JFrame {
 		JPanel panelButtons = new JPanel();
 		panel.add(panelButtons);
 
+		/**
+		 * Order tiles
+		 */
+		JButton btnOrderTiles = new JButton("Order tiles");
+		panelButtons.add(btnOrderTiles);
+		/**
+		 * Take tile button
+		 */
 		JButton btnTakeTile = new JButton("Take tile");
 		panelButtons.add(btnTakeTile);
 
+		/**
+		 * End turn button
+		 */
 		JButton btnEndTurn = new JButton("End turn");
 		panelButtons.add(btnEndTurn);
+
+		/**
+		 * Player tiles
+		 */
 		JPanel panelTiles = new JPanel();
 		panel.add(panelTiles);
-		
-		CountdownPanel panelTimer = new CountdownPanel();
-		panel.add(panelTimer);
-		
-//		JLabel lblNewLabel_1 = new JLabel("Timer");
-//		panelTimer.add(lblNewLabel_1);
-		
+
+		/**
+		 * Board which contains tilesets from players
+		 */
 		JPanel panelBoard = new JPanel();
 		getContentPane().add(panelBoard);
 		panelBoard.setLayout(new FlowLayout());
+
+		/**
+		 * Timer
+		 */
+//		CountdownPanel panelTimer = new CountdownPanel(game, panelBoard, this);
+//		panel.add(panelTimer);
+
+		/**
+		 * Display player tiles
+		 */
 		for (int i = 0; i < game.getCurrentPlayer().getRack().getRackTiles().size(); i++) {
 			Tile t = game.getCurrentPlayer().getRack().getRackTiles().get(i);
 			TileComponent btnTile = new TileComponent(t);
@@ -77,7 +112,29 @@ public class PlayerTable extends JFrame {
 				panelBoard.add(component);
 			}
 		}
-		// panel.add(btnEndRound);
+
+		/**
+		 * Action button Order tiles
+		 */
+		btnOrderTiles.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				List<TileComponent> components = new ArrayList<TileComponent>();
+				for (Component component : panelTiles.getComponents()) {
+					TileComponent tileComponent = (TileComponent) component;
+					components.add(tileComponent);
+				}
+				Collections.sort(components);
+				panelTiles.removeAll();
+				for (TileComponent tileComponent : components) {
+					panelTiles.add(tileComponent, BorderLayout.CENTER);
+				}
+				revalidate();
+				repaint();
+			}
+		});
 		/**
 		 * Action button End turn
 		 */
@@ -99,6 +156,7 @@ public class PlayerTable extends JFrame {
 						}
 						repaint();
 					} else {
+						System.out.println("score = " + score);
 						List<Tile> listToRemove = new ArrayList<Tile>();
 						revalidate();
 						repaint();
@@ -122,8 +180,23 @@ public class PlayerTable extends JFrame {
 						JOptionPane.showMessageDialog(null,
 								"RUMMIKUB ! Player " + game.getCurrentPlayer().getNumber() + " wins.",
 								" Congratulations! ", JOptionPane.INFORMATION_MESSAGE);
+						dispose();
 						ScoreTable scoreTable = new ScoreTable();
 						scoreTable.setVisible(true);
+					} else {
+						List<Tile> listToRemove = new ArrayList<Tile>();
+						revalidate();
+						repaint();
+						dispose();
+						Component[] tabComponents = panelBoard.getComponents();
+						for (Component component : tabComponents) {
+							TileComponent tileComponent = (TileComponent) component;
+							listToRemove.add(tileComponent.getTile());
+						}
+						game.getCurrentPlayer().getRack().removeTilesFromRack(listToRemove);
+						game.setCurrentPlayer(game.nextPlayer());
+						PlayerTable playerTable = new PlayerTable(game, panelBoard.getComponents());
+						playerTable.setVisible(true);
 					}
 				}
 			}

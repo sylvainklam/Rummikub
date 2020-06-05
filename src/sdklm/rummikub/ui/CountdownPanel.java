@@ -3,13 +3,15 @@ package sdklm.rummikub.ui;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import sdklm.rummikub.game.Game;
 
 @SuppressWarnings("serial")
 public class CountdownPanel extends JPanel {
@@ -20,7 +22,7 @@ public class CountdownPanel extends JPanel {
 
 	private JLabel label;
 
-	public CountdownPanel() {
+	public CountdownPanel(Game game, JPanel panelBoard, JFrame frame) {
 		setLayout(new GridBagLayout());
 
 		timer = new Timer(10, new ActionListener() {
@@ -35,24 +37,35 @@ public class CountdownPanel extends JPanel {
 				if (clockTime >= duration) {
 					clockTime = duration;
 					timer.stop();
+					JOptionPane.showMessageDialog(null, "Your time is elapsed. Click OK to end turn", " Time elapsed ",
+							JOptionPane.WARNING_MESSAGE);
+					if (game.getCurrentPlayer().isFirstTurn()) game.getCurrentPlayer().setFirstTurn(false);
+					frame.dispose();
+					game.setCurrentPlayer(game.nextPlayer());
+					PlayerTable playerTable = new PlayerTable(game, panelBoard.getComponents());
+					playerTable.setVisible(true);
 				}
-				SimpleDateFormat df = new SimpleDateFormat("mm:ss:SSS");
+				SimpleDateFormat df = new SimpleDateFormat("mm:ss");
 				label.setText(df.format(duration - clockTime));
-
 			}
 		});
 
 		timer.setInitialDelay(0);
 
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (!timer.isRunning()) {
-					startTime = -1;
-					timer.start();
-				}
-			}
-		});
+		if (!timer.isRunning()) {
+			startTime = -1;
+			timer.start();
+		}
+
+//		addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				if (!timer.isRunning()) {
+//					startTime = -1;
+//					timer.start();
+//				}
+//			}
+//		});
 
 		label = new JLabel("...");
 		add(label);
