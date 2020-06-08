@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import sdklm.rummikub.tiles.Joker;
 import sdklm.rummikub.tiles.Tile;
 import sdklm.rummikub.tiles.TileGroup;
 import sdklm.rummikub.tiles.Tileset;
@@ -45,15 +46,20 @@ public class Player {
 		this.getRack().getRackTiles().add(t);
 	}
 
-	public int endTurn(Component[] components, Game game) {
-		int score = 0;
-		System.out.println("end first turn for player " + game.getCurrentPlayer().getNumber());
+	private List<Tile> getTilesPlayedBy(Player p, Component[] components) {
 		List<Tile> list = new ArrayList<Tile>();
 		for (Component tileComponent : components) {
 			TileComponent t = (TileComponent) tileComponent;
-			if (t.getTile().getPlayedBy() == game.getCurrentPlayer().getNumber())
+			if (t.getTile().getPlayedBy() == p.getNumber())
 				list.add(t.getTile());
 		}
+		return list;
+	}
+
+	public int endTurn(Component[] components, Game game) {
+		int score = 0;
+		System.out.println("end first turn for player " + game.getCurrentPlayer().getNumber());
+		List<Tile> list = getTilesPlayedBy(game.getCurrentPlayer(), components);
 		Collections.sort(list);
 		System.out.println(list);
 
@@ -62,15 +68,26 @@ public class Player {
 		else {
 			if (list.size() == Tileset.MIN_NUM_TILES_IN_GROUP_OR_RUN || list.size() == Tileset.MAX_NUM_TILES_IN_GROUP) {
 				Tileset tileset = new Tileset(list);
-				if (tileset.isValidGroup() || tileset.isValidRun()) {
-					score = Tileset.getScore(tileset);
+				if (tileset.containsJoker(list)) {
+					Joker joker = new Joker();
+					list.remove(joker);
+					tileset.setTiles(list);
+					if (tileset.isValidGroup() || tileset.isValidRun()) {
+						System.out.println("tileset apres suppression du joker " + tileset);
+						if (tileset.isValidGroup())
+						{
+							//Tile t = new Tile(tileset.getTiles().get(0).getNumber(),)
+						}
+					}
+				} else if (tileset.isValidGroup() || tileset.isValidRun()) {
+					score = Tileset.getScore(tileset.getTiles());
 					if (score >= 30)
 						return score;
 				}
 			} else {
 				Tileset tileset = new Tileset(list);
 				if (tileset.isValidRun()) {
-					score = Tileset.getScore(tileset);
+					score = Tileset.getScore(tileset.getTiles());
 				} else {
 					int nbElements = tileset.size();
 					System.out.println("nb elements " + nbElements);
@@ -83,9 +100,11 @@ public class Player {
 								+ Tileset.MIN_NUM_TILES_IN_GROUP_OR_RUN + " tiles");
 						for (int i = 1; i <= nbGroupes; i++) {
 							List<Tile> tiles = tileset.getTiles().subList(0, Tileset.MIN_NUM_TILES_IN_GROUP_OR_RUN);
-							TileGroup tileGroup = new TileGroup(tiles);			
-							if (tileGroup.isValidGroup()) {
-								score += Tileset.getScore(tileset);
+							TileGroup tileGroup = new TileGroup(tiles);
+							System.out.println("tileGroup " + tileGroup);
+							if (tileGroup.isValidGroup() || tileGroup.isValidRun()) {
+								score += Tileset.getScore(tileGroup.getTiles());
+								System.out.println("score " + score);
 								tileset.getTiles().removeAll(tiles);
 							}
 						}
@@ -93,11 +112,22 @@ public class Player {
 					} else {
 						System.out.println("il y aura " + nbGroupes + " groupes et il faudra ajouter 1 tile sur "
 								+ reste + " groupes");
+						for (int i = 1; i <= nbGroupes; i++) {
+							List<Tile> tiles = tileset.getTiles().subList(0, Tileset.MIN_NUM_TILES_IN_GROUP_OR_RUN+1);
+							TileGroup tileGroup = new TileGroup(tiles);
+							System.out.println("tileGroup " + tileGroup);
+							if (tileGroup.isValidGroup() || tileGroup.isValidRun()) {
+								score += Tileset.getScore(tileGroup.getTiles());
+								System.out.println("score " + score);
+								tileset.getTiles().removeAll(tiles);
+							}
+						}
 					}
 				}
 			}
 		}
 		return score;
+
 	}
 
 	public boolean isFirstTurn() {

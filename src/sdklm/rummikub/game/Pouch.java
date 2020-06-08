@@ -28,6 +28,8 @@ public class Pouch {
 	}
 
 	public Tile getRandomTile() {
+		if (getContent().size() == 0)
+			return null;
 		Random random = new Random();
 		Tile randomTile = content.get(random.nextInt(content.size()));
 		content.remove(randomTile);

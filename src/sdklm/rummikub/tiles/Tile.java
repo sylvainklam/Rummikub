@@ -11,7 +11,7 @@ public class Tile implements Comparable<Tile> {
 	private int number;// from 1 to 13
 	private Color color;// see Color Enumeration
 	private int playedBy;
-	
+
 	public Tile() {// this will be a joker by default
 		setNumber(0);
 		setColor(null);
@@ -39,7 +39,7 @@ public class Tile implements Comparable<Tile> {
 	}
 
 	public String toString() {
-		return "Tile " + getNumber() + " (" + getColor() + ")";
+		return "Tile [" + getNumber() + " (" + getColor() + ")-P" + getPlayedBy() + "]";
 	}
 
 	@Override

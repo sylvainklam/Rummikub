@@ -89,8 +89,7 @@ public class Tileset {
 	}
 
 	public boolean isValidGroup() {
-		return tiles.size() >= MIN_NUM_TILES_IN_GROUP_OR_RUN && tiles.size() <= MAX_NUM_TILES_IN_GROUP
-				&& isDifferentColors(tiles) && isSameRanks(tiles);
+		return tiles.size() <= MAX_NUM_TILES_IN_GROUP && isDifferentColors(tiles) && isSameRanks(tiles);
 	}
 
 	private boolean isSameRanks(List<Tile> tiles2) {
@@ -138,11 +137,25 @@ public class Tileset {
 	 * @param tileset
 	 * @return
 	 */
-	public static int getScore(Tileset tileset) {
+	public static int getScore(List<Tile> tiles) {
 		int score = 0;
-		for (Tile t : tileset.getTiles()) {
+		for (Tile t : tiles) {
 			score += t.getNumber();
 		}
 		return score;
+	}
+
+	/**
+	 * Tileset contains Joker ??
+	 * 
+	 * @param tiles
+	 * @return
+	 */
+	public boolean containsJoker(List<Tile> tiles) {
+		for (Tile t : tiles) {
+			if (t.getNumber() == 0)
+				return true;
+		}
+		return false;
 	}
 }

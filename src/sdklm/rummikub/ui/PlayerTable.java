@@ -6,6 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -88,8 +90,8 @@ public class PlayerTable extends JFrame {
 		/**
 		 * Timer
 		 */
-//		CountdownPanel panelTimer = new CountdownPanel(game, panelBoard, this);
-//		panel.add(panelTimer);
+		CountdownPanel panelTimer = new CountdownPanel(game, panelBoard, this);
+		panel.add(panelTimer);
 
 		/**
 		 * Display player tiles
@@ -168,6 +170,7 @@ public class PlayerTable extends JFrame {
 							TileComponent tileComponent = (TileComponent) component;
 							listToRemove.add(tileComponent.getTile());
 						}
+						panelTimer.stopTimer();
 						game.getCurrentPlayer().getRack().removeTilesFromRack(listToRemove);
 						game.getCurrentPlayer().setFirstTurn(false);
 						game.setCurrentPlayer(game.nextPlayer());
@@ -209,26 +212,42 @@ public class PlayerTable extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Tile t = game.getPouch().getRandomTile();
-				System.out.println("Player " + game.getCurrentPlayer().getNumber() + " took " + t.toString());
-				JOptionPane.showMessageDialog(null, "You took " + t.toString(), " Tile from the pouch",
-						JOptionPane.INFORMATION_MESSAGE);
-				game.getCurrentPlayer().getRack().addTileToRack(t);
-				TileComponent btnTilePouch = new TileComponent(t);
-				panelTiles.add(btnTilePouch, BorderLayout.CENTER);
-				btnTilePouch.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						panelBoard.add(btnTilePouch);
-						repaint();
-					}
-				});
-				panelTiles.revalidate();
-				panelTiles.repaint();
+				if (t != null) {
+					game.getCurrentPlayer().getRack().addTileToRack(t, game.getCurrentPlayer());
+					System.out.println("Player " + game.getCurrentPlayer().getNumber() + " took " + t.toString());
+					JOptionPane.showMessageDialog(null, "You took " + t.toString(), " Tile from the pouch",
+							JOptionPane.INFORMATION_MESSAGE);
+					TileComponent btnTilePouch = new TileComponent(t);
+					panelTiles.add(btnTilePouch, BorderLayout.CENTER);
+					btnTilePouch.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							panelBoard.add(btnTilePouch);
+							repaint();
+						}
+					});
+					panelTiles.revalidate();
+					panelTiles.repaint();
+				} else {
+					System.out.println("No more tiles in the pouch");
+					JOptionPane.showMessageDialog(null, "No more tiles in the pouch", "Pouch empty",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
 				game.getCurrentPlayer().endTurn(panelBoard.getComponents(), game);
+				panelTimer.stopTimer();
 				dispose();
 				game.setCurrentPlayer(game.nextPlayer());
 				PlayerTable playerTable = new PlayerTable(game, panelBoard.getComponents());
 				playerTable.setVisible(true);
+			}
+		});
+
+		/**
+		 * Window listener for window closing and program exiting properly
+		 */
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
 			}
 		});
 	}

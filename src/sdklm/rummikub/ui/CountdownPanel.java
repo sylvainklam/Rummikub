@@ -13,6 +13,12 @@ import javax.swing.Timer;
 
 import sdklm.rummikub.game.Game;
 
+/**
+ * Countdown panel
+ * 
+ * @author SKLAM
+ *
+ */
 @SuppressWarnings("serial")
 public class CountdownPanel extends JPanel {
 
@@ -24,7 +30,6 @@ public class CountdownPanel extends JPanel {
 
 	public CountdownPanel(Game game, JPanel panelBoard, JFrame frame) {
 		setLayout(new GridBagLayout());
-
 		timer = new Timer(10, new ActionListener() {
 
 			@Override
@@ -39,7 +44,8 @@ public class CountdownPanel extends JPanel {
 					timer.stop();
 					JOptionPane.showMessageDialog(null, "Your time is elapsed. Click OK to end turn", " Time elapsed ",
 							JOptionPane.WARNING_MESSAGE);
-					if (game.getCurrentPlayer().isFirstTurn()) game.getCurrentPlayer().setFirstTurn(false);
+					if (game.getCurrentPlayer().isFirstTurn())
+						game.getCurrentPlayer().setFirstTurn(false);
 					frame.dispose();
 					game.setCurrentPlayer(game.nextPlayer());
 					PlayerTable playerTable = new PlayerTable(game, panelBoard.getComponents());
@@ -49,25 +55,22 @@ public class CountdownPanel extends JPanel {
 				label.setText(df.format(duration - clockTime));
 			}
 		});
-
 		timer.setInitialDelay(0);
-
 		if (!timer.isRunning()) {
 			startTime = -1;
 			timer.start();
 		}
-
-//		addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				if (!timer.isRunning()) {
-//					startTime = -1;
-//					timer.start();
-//				}
-//			}
-//		});
-
 		label = new JLabel("...");
 		add(label);
+	}
+
+	public boolean stopTimer() {
+		if (timer.isRunning()) {
+			timer.stop();
+		} else {
+			System.out.println("Timer is not running");
+			return false;
+		}
+		return true;
 	}
 }

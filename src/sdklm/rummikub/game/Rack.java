@@ -31,7 +31,8 @@ public class Rack {
 		return randomTile;
 	}
 
-	public void addTileToRack(Tile t) {
+	public void addTileToRack(Tile t, Player p) {
+		t.setPlayedBy(p.getNumber());
 		getRackTiles().add(t);
 	}
 
