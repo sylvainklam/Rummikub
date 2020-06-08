@@ -7,7 +7,6 @@ import java.util.List;
 
 import sdklm.rummikub.tiles.Joker;
 import sdklm.rummikub.tiles.Tile;
-import sdklm.rummikub.tiles.TileGroup;
 import sdklm.rummikub.tiles.Tileset;
 import sdklm.rummikub.ui.TileComponent;
 
@@ -74,9 +73,8 @@ public class Player {
 					tileset.setTiles(list);
 					if (tileset.isValidGroup() || tileset.isValidRun()) {
 						System.out.println("tileset apres suppression du joker " + tileset);
-						if (tileset.isValidGroup())
-						{
-							//Tile t = new Tile(tileset.getTiles().get(0).getNumber(),)
+						if (tileset.isValidGroup()) {
+							// Tile t = new Tile(tileset.getTiles().get(0).getNumber(),)
 						}
 					}
 				} else if (tileset.isValidGroup() || tileset.isValidRun()) {
@@ -100,7 +98,7 @@ public class Player {
 								+ Tileset.MIN_NUM_TILES_IN_GROUP_OR_RUN + " tiles");
 						for (int i = 1; i <= nbGroupes; i++) {
 							List<Tile> tiles = tileset.getTiles().subList(0, Tileset.MIN_NUM_TILES_IN_GROUP_OR_RUN);
-							TileGroup tileGroup = new TileGroup(tiles);
+							Tileset tileGroup = new Tileset(tiles);
 							System.out.println("tileGroup " + tileGroup);
 							if (tileGroup.isValidGroup() || tileGroup.isValidRun()) {
 								score += Tileset.getScore(tileGroup.getTiles());
@@ -113,8 +111,8 @@ public class Player {
 						System.out.println("il y aura " + nbGroupes + " groupes et il faudra ajouter 1 tile sur "
 								+ reste + " groupes");
 						for (int i = 1; i <= nbGroupes; i++) {
-							List<Tile> tiles = tileset.getTiles().subList(0, Tileset.MIN_NUM_TILES_IN_GROUP_OR_RUN+1);
-							TileGroup tileGroup = new TileGroup(tiles);
+							List<Tile> tiles = tileset.getTiles().subList(0, Tileset.MIN_NUM_TILES_IN_GROUP_OR_RUN + 1);
+							Tileset tileGroup = new Tileset(tiles);
 							System.out.println("tileGroup " + tileGroup);
 							if (tileGroup.isValidGroup() || tileGroup.isValidRun()) {
 								score += Tileset.getScore(tileGroup.getTiles());
