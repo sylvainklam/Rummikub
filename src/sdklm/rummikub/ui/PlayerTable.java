@@ -17,7 +17,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 import sdklm.rummikub.game.Game;
 import sdklm.rummikub.tiles.Tile;
@@ -52,7 +51,6 @@ public class PlayerTable extends JFrame {
 		 */
 		JLabel lblNewLabel = new JLabel(
 				"Round " + game.getCurrentRound().getNumber() + " - Player " + game.getCurrentPlayer().getNumber());
-		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		panel.add(lblNewLabel);
 		JPanel panelButtons = new JPanel();
 		panel.add(panelButtons);
@@ -165,6 +163,8 @@ public class PlayerTable extends JFrame {
 						JOptionPane.showMessageDialog(null, "Your score is " + score + " points.", " Congratulations! ",
 								JOptionPane.INFORMATION_MESSAGE);
 						dispose();
+						
+						//TODO Retirer les tiles joués par le joueur
 						Component[] tabComponents = panelBoard.getComponents();
 						for (Component component : tabComponents) {
 							TileComponent tileComponent = (TileComponent) component;

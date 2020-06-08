@@ -38,10 +38,11 @@ public class TileComponent extends JButton implements Comparable<TileComponent> 
 			case ORANGE:
 				setBackground(Color.orange);
 				break;
-			default:
-				setBackground(Color.white);
-				setForeground(Color.black);
-				break;
+				//TODO tester avec cette modification
+//			default:
+//				setBackground(Color.white);
+//				setForeground(Color.black);
+//				break;
 			}
 		}
 	}
