@@ -1,4 +1,5 @@
 package test.sdklm.rummikub.tiles;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ class TestTileset {
 		Tileset tileset = new Tileset(listRun);
 		System.out.println(tileset.isValidRun());
 	}
+
 	@Test
 	void testGroup() {
 		List<Tile> listGroup = new ArrayList<Tile>();

@@ -8,7 +8,7 @@ import sdklm.rummikub.tiles.Tile;
 
 public class Rack {
 
-	private static final int MAX_TILES = 14;
+	private static final int MAX_TILES = 8;
 
 	private List<Tile> rackTiles = new ArrayList<Tile>();
 

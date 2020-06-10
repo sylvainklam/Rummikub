@@ -97,6 +97,8 @@ public class PlayerTable extends JFrame {
 		for (int i = 0; i < game.getCurrentPlayer().getRack().getRackTiles().size(); i++) {
 			Tile t = game.getCurrentPlayer().getRack().getRackTiles().get(i);
 			TileComponent btnTile = new TileComponent(t);
+			DragListener dl = new DragListener(btnTile);
+			dl.addHandle(btnTile);
 			panelTiles.add(btnTile, BorderLayout.CENTER);
 			btnTile.addActionListener(new ActionListener() {
 				@Override
@@ -163,12 +165,12 @@ public class PlayerTable extends JFrame {
 						JOptionPane.showMessageDialog(null, "Your score is " + score + " points.", " Congratulations! ",
 								JOptionPane.INFORMATION_MESSAGE);
 						dispose();
-						
-						//TODO Retirer les tiles joués par le joueur
 						Component[] tabComponents = panelBoard.getComponents();
 						for (Component component : tabComponents) {
 							TileComponent tileComponent = (TileComponent) component;
-							listToRemove.add(tileComponent.getTile());
+							if (tileComponent.getTile().getPlayedBy() == game.getCurrentPlayer().getNumber()) {
+								listToRemove.add(tileComponent.getTile());
+							}
 						}
 						panelTimer.stopTimer();
 						game.getCurrentPlayer().getRack().removeTilesFromRack(listToRemove);
@@ -194,7 +196,9 @@ public class PlayerTable extends JFrame {
 						Component[] tabComponents = panelBoard.getComponents();
 						for (Component component : tabComponents) {
 							TileComponent tileComponent = (TileComponent) component;
-							listToRemove.add(tileComponent.getTile());
+							if (tileComponent.getTile().getPlayedBy() == game.getCurrentPlayer().getNumber()) {
+								listToRemove.add(tileComponent.getTile());
+							}
 						}
 						game.getCurrentPlayer().getRack().removeTilesFromRack(listToRemove);
 						game.setCurrentPlayer(game.nextPlayer());
@@ -215,7 +219,10 @@ public class PlayerTable extends JFrame {
 				if (t != null) {
 					game.getCurrentPlayer().getRack().addTileToRack(t, game.getCurrentPlayer());
 					System.out.println("Player " + game.getCurrentPlayer().getNumber() + " took " + t.toString());
-					JOptionPane.showMessageDialog(null, "You took " + t.toString(), " Tile from the pouch",
+					String message = "You took " + t.toString();
+					if (t.isJoker())
+						message = "You took a joker";
+					JOptionPane.showMessageDialog(null, message, " Tile from the pouch",
 							JOptionPane.INFORMATION_MESSAGE);
 					TileComponent btnTilePouch = new TileComponent(t);
 					panelTiles.add(btnTilePouch, BorderLayout.CENTER);
