@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import sdklm.rummikub.tiles.Joker;
 import sdklm.rummikub.tiles.Tile;
 import sdklm.rummikub.tiles.Tileset;
 import sdklm.rummikub.ui.TileComponent;
@@ -68,13 +67,15 @@ public class Player {
 			if (list.size() == Tileset.MIN_NUM_TILES_IN_GROUP_OR_RUN || list.size() == Tileset.MAX_NUM_TILES_IN_GROUP) {
 				Tileset tileset = new Tileset(list);
 				if (tileset.containsJoker(list)) {
-					Joker joker = new Joker();
-					list.remove(joker);
-					tileset.setTiles(list);
+					tileset.setTiles(tileset.removeJoker(list));
 					if (tileset.isValidGroup() || tileset.isValidRun()) {
 						System.out.println("tileset apres suppression du joker " + tileset);
 						if (tileset.isValidGroup()) {
+							System.out.println("c'est un groupe");
 							// Tile t = new Tile(tileset.getTiles().get(0).getNumber(),)
+						}
+						if (tileset.isValidRun()) {
+							System.out.println("c'est un run");
 						}
 					}
 				} else if (tileset.isValidGroup() || tileset.isValidRun()) {

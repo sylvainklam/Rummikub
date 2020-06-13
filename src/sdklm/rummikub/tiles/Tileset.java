@@ -1,6 +1,8 @@
 package sdklm.rummikub.tiles;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -157,5 +159,19 @@ public class Tileset {
 				return true;
 		}
 		return false;
+	}
+
+	public List<Tile> removeJoker(List<Tile> list) {
+		List<Tile> tilesToRemove = new ArrayList<Tile>();
+		for (Tile t : tiles) {
+			if (t.getNumber() == 0) {
+				tilesToRemove.add(t);
+			}
+		}
+		for (Tile tileToRemove : tilesToRemove) {
+			list.remove(tileToRemove);
+		}
+		Collections.sort(list);
+		return list;
 	}
 }
