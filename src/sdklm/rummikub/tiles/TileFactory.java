@@ -11,8 +11,8 @@ import java.util.List;
  */
 public class TileFactory {
 
-	private static final int NB_TILES_SET = 2;
-	private static final int NB_TILES_PER_SET = 13;
+	public static final int NB_TILES_SET = 2;
+	public static final int NB_TILES_PER_SET = 13;
 
 	private static List<Tile> tiles = new ArrayList<Tile>();
 

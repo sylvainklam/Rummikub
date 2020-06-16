@@ -156,7 +156,6 @@ public class PlayerTable extends JFrame {
 								panelBoard.remove(component);
 							}
 						}
-						repaint();
 					} else {
 						System.out.println("score = " + score);
 						List<Tile> listToRemove = new ArrayList<Tile>();
@@ -179,6 +178,8 @@ public class PlayerTable extends JFrame {
 						PlayerTable playerTable = new PlayerTable(game, panelBoard.getComponents());
 						playerTable.setVisible(true);
 					}
+					revalidate();
+					repaint();
 				} else {
 					System.out.println("end turn for player " + game.getCurrentPlayer().getNumber());
 					if (game.getCurrentPlayer().getRack().getRackTiles().size() == 0) {

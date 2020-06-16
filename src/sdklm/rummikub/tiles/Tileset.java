@@ -32,6 +32,19 @@ public class Tileset {
 		return getTiles().size();
 	}
 
+	public void addTile(Tile t) {
+		getTiles().add(t);
+	}
+
+	public Tile getLastTile() {
+		int nb = getTiles().size();
+		return getTiles().get(nb - 1);
+	}
+
+	public Tile getFirstTile() {
+		return getTiles().get(0);
+	}
+
 	private static boolean isValidRankInRun(final int rank, final int cardNumberInRun) {
 		return rank >= cardNumberInRun;
 	}

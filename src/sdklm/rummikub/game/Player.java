@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import sdklm.rummikub.tiles.Tile;
+import sdklm.rummikub.tiles.TileFactory;
 import sdklm.rummikub.tiles.Tileset;
 import sdklm.rummikub.ui.TileComponent;
 
@@ -72,10 +73,28 @@ public class Player {
 						System.out.println("tileset apres suppression du joker " + tileset);
 						if (tileset.isValidGroup()) {
 							System.out.println("c'est un groupe");
-							// Tile t = new Tile(tileset.getTiles().get(0).getNumber(),)
+							Tile t = new Tile(tileset.getFirstTile().getNumber(),null);
+							tileset.addTile(t);
+							score = Tileset.getScore(tileset.getTiles());
+							if (score >= 30)
+								return score;
 						}
 						if (tileset.isValidRun()) {
 							System.out.println("c'est un run");
+							Tile firstTile = tileset.getFirstTile();
+							Tile lastTile = tileset.getLastTile();
+							int number=0;
+							if (lastTile.getNumber() < TileFactory.NB_TILES_PER_SET)
+							{
+								number=lastTile.getNumber()+1;
+							} else {
+								number=firstTile.getNumber()-1;
+							}
+							Tile newTile = new Tile(number,firstTile.getColor());
+							tileset.addTile(newTile);
+							score = Tileset.getScore(tileset.getTiles());
+							if (score >= 30)
+								return score;
 						}
 					}
 				} else if (tileset.isValidGroup() || tileset.isValidRun()) {
